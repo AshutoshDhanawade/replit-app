@@ -71,6 +71,24 @@ async function initializeDatabase() {
       );
     `);
 
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS wardrobe_items (
+        id SERIAL PRIMARY KEY,
+        user_id VARCHAR(100) DEFAULT 'user1',
+        name VARCHAR(255) NOT NULL,
+        category VARCHAR(50) NOT NULL,
+        brand VARCHAR(100),
+        color VARCHAR(50),
+        color_hex VARCHAR(7),
+        size VARCHAR(20),
+        material VARCHAR(100),
+        tags TEXT,
+        image_url TEXT,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     console.log('Database tables created successfully');
 
     const { rows } = await client.query('SELECT COUNT(*) FROM products');

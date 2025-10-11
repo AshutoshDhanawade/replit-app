@@ -248,4 +248,125 @@ router.get('/health', (req, res) => {
   });
 });
 
+router.post('/users/:userId/wardrobe', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const itemData = req.body;
+    
+    if (!itemData.name || !itemData.category) {
+      return res.status(400).json({ 
+        error: 'Missing required fields',
+        message: 'Item name and category are required'
+      });
+    }
+
+    const item = await storage.addWardrobeItem(userId, itemData);
+    
+    res.status(201).json({
+      message: 'Item added to wardrobe successfully',
+      item
+    });
+  } catch (error) {
+    console.error('Error adding wardrobe item:', error);
+    res.status(500).json({ 
+      error: 'Failed to add item',
+      message: 'Unable to add item to wardrobe at this time'
+    });
+  }
+});
+
+router.get('/users/:userId/wardrobe', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { category, color } = req.query;
+    
+    const filters = { category, color };
+    const items = await storage.getWardrobeItems(userId, filters);
+    
+    res.json({
+      items,
+      total: items.length
+    });
+  } catch (error) {
+    console.error('Error fetching wardrobe items:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch wardrobe items',
+      message: 'Unable to load wardrobe at this time'
+    });
+  }
+});
+
+router.patch('/users/:userId/wardrobe/:itemId', async (req, res) => {
+  try {
+    const { userId, itemId } = req.params;
+    const itemData = req.body;
+    
+    const updatedItem = await storage.updateWardrobeItem(itemId, userId, itemData);
+    
+    if (!updatedItem) {
+      return res.status(404).json({ 
+        error: 'Item not found',
+        message: 'The wardrobe item could not be found'
+      });
+    }
+    
+    res.json({
+      message: 'Item updated successfully',
+      item: updatedItem
+    });
+  } catch (error) {
+    console.error('Error updating wardrobe item:', error);
+    res.status(500).json({ 
+      error: 'Failed to update item',
+      message: 'Unable to update wardrobe item at this time'
+    });
+  }
+});
+
+router.delete('/users/:userId/wardrobe/:itemId', async (req, res) => {
+  try {
+    const { userId, itemId } = req.params;
+    
+    const success = await storage.deleteWardrobeItem(itemId, userId);
+    
+    if (!success) {
+      return res.status(404).json({ 
+        error: 'Item not found',
+        message: 'The wardrobe item could not be found'
+      });
+    }
+    
+    res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting wardrobe item:', error);
+    res.status(500).json({ 
+      error: 'Failed to delete item',
+      message: 'Unable to delete wardrobe item at this time'
+    });
+  }
+});
+
+router.get('/users/:userId/wardrobe/:itemId/recommendations', async (req, res) => {
+  try {
+    const { userId, itemId } = req.params;
+    
+    const result = await storage.getWardrobeRecommendations(itemId, userId);
+    
+    if (!result.item) {
+      return res.status(404).json({ 
+        error: 'Item not found',
+        message: 'Cannot generate recommendations for unknown item'
+      });
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching wardrobe recommendations:', error);
+    res.status(500).json({ 
+      error: 'Failed to generate recommendations',
+      message: 'Unable to load outfit recommendations at this time'
+    });
+  }
+});
+
 module.exports = router;

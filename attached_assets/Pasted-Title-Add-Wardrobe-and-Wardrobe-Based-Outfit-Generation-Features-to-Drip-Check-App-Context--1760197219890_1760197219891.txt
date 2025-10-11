@@ -1,0 +1,99 @@
+Title: Add “Wardrobe” and “Wardrobe-Based Outfit Generation” Features to Drip Check App
+
+🔍 Context
+
+We are building an outfit recommendation app called Drip Check using React.js for the frontend, Node.js with Express for the backend, and MySQL for the database.
+
+Currently, the app functions as a marketplace-based outfit generator:
+
+On the homepage, users can search for clothing items from the marketplace.
+
+When they select an item (for example, a topwear), the app generates a complete outfit by suggesting other matching items (like bottomwear and footwear) from the marketplace.
+
+We now want to add a Wardrobe feature that allows users to store their own clothing items and generate outfits based only on their personal wardrobe instead of marketplace items.
+
+🧩 Goal
+
+To expand Drip Check by adding two major capabilities:
+
+A Wardrobe System where users can add, view, edit, and manage their own clothing items.
+
+A Wardrobe-Based Outfit Generator that creates complete outfit recommendations using only the items saved in a user’s wardrobe.
+
+👕 Feature 1: Personal Wardrobe System
+
+Purpose:
+Allow each registered user to upload and manage their personal clothing collection within the app.
+
+Requirements:
+
+Add a dedicated “Wardrobe” page accessible from the main navigation.
+
+On this page, users should be able to:
+
+Upload an image of each clothing item they own.
+
+Categorize the item (for example: topwear, bottomwear, footwear, or accessories).
+
+Add optional details such as color, brand, size, material, or tags.
+
+Display all items in a clean, visually organized grid or list format.
+
+Include options to edit or delete any item.
+
+Provide filtering or sorting options so users can view items by category.
+
+Each wardrobe should be unique to the logged-in user.
+
+Expected Experience:
+The wardrobe should feel like a personal digital closet where the user can browse all their items with images and details, easily manage them, and prepare to generate outfits using only those items.
+
+👗 Feature 2: Outfit Generation Using Wardrobe Items
+
+Purpose:
+Enable users to generate complete outfits that are composed entirely of their own wardrobe items.
+
+Requirements:
+
+Allow users to switch between two modes within the app:
+
+Marketplace Mode (default): Generates outfits from marketplace items.
+
+Wardrobe Mode: Generates outfits using only wardrobe items.
+
+In wardrobe mode, when a user selects one clothing item (for example, a topwear), the system should generate complementary outfit suggestions using other items from their wardrobe.
+
+The generated outfit should visually display a complete look — showing the selected base item along with matching items from other categories.
+
+Ensure the experience is consistent with the marketplace outfit generation flow, so it feels like part of the same system.
+
+The wardrobe-based generation logic should focus on realistic styling combinations (e.g., pairing topwear with bottomwear and footwear).
+
+Include an easy way for users to toggle back to marketplace mode if they wish to explore marketplace recommendations again.
+
+Expected Experience:
+Users can seamlessly switch between browsing outfits from the global marketplace and creating looks using their own personal items, making Drip Check both a shopping and personal styling tool.
+
+🧠 Functional Expectations
+
+Maintain the same UI style, tone, and flow as existing Drip Check components.
+
+The wardrobe and outfit generation experiences should be smooth, intuitive, and integrated within the app’s existing layout and navigation.
+
+The system should recognize whether the user is in marketplace or wardrobe mode at all times.
+
+Data for each user’s wardrobe should be stored securely and linked to their profile.
+
+Users should feel like they are managing their own virtual closet — and the outfit generator should intelligently use only the items they’ve added when in wardrobe mode.
+
+🎯 Final Deliverables
+
+A fully functional Wardrobe section where users can upload and manage their personal items.
+
+A Wardrobe-based outfit recommendation flow that generates looks from user-added wardrobe items.
+
+A simple toggle or control to switch between Marketplace and Wardrobe modes.
+
+Consistent user interface and experience across both modes.
+
+Proper integration with the existing Drip Check app structure and user accounts.

@@ -375,6 +375,216 @@ class DataStorage {
       await client.end();
     }
   }
+
+  async addWardrobeItem(userId, itemData) {
+    const client = await this.getClient();
+    try {
+      const result = await client.query(
+        `INSERT INTO wardrobe_items 
+         (user_id, name, category, brand, color, color_hex, size, material, tags, image_url, description)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         RETURNING *`,
+        [
+          userId, 
+          itemData.name, 
+          itemData.category, 
+          itemData.brand, 
+          itemData.color, 
+          itemData.colorHex,
+          itemData.size, 
+          itemData.material, 
+          itemData.tags, 
+          itemData.imageUrl, 
+          itemData.description
+        ]
+      );
+      
+      const row = result.rows[0];
+      return {
+        id: row.id,
+        userId: row.user_id,
+        name: row.name,
+        category: row.category,
+        brand: row.brand,
+        color: row.color,
+        colorHex: row.color_hex,
+        size: row.size,
+        material: row.material,
+        tags: row.tags,
+        imageUrl: row.image_url,
+        description: row.description,
+        createdAt: row.created_at
+      };
+    } finally {
+      await client.end();
+    }
+  }
+
+  async getWardrobeItems(userId, filters = {}) {
+    const client = await this.getClient();
+    try {
+      let query = 'SELECT * FROM wardrobe_items WHERE user_id = $1';
+      const params = [userId];
+      let paramIndex = 2;
+
+      if (filters.category) {
+        query += ` AND category = $${paramIndex}`;
+        params.push(filters.category);
+        paramIndex++;
+      }
+
+      if (filters.color) {
+        query += ` AND color ILIKE $${paramIndex}`;
+        params.push(`%${filters.color}%`);
+        paramIndex++;
+      }
+
+      query += ' ORDER BY created_at DESC';
+
+      const result = await client.query(query, params);
+      
+      return result.rows.map(row => ({
+        id: row.id,
+        userId: row.user_id,
+        name: row.name,
+        category: row.category,
+        brand: row.brand,
+        color: row.color,
+        colorHex: row.color_hex,
+        size: row.size,
+        material: row.material,
+        tags: row.tags,
+        imageUrl: row.image_url,
+        description: row.description,
+        createdAt: row.created_at
+      }));
+    } finally {
+      await client.end();
+    }
+  }
+
+  async updateWardrobeItem(itemId, userId, itemData) {
+    const client = await this.getClient();
+    try {
+      const result = await client.query(
+        `UPDATE wardrobe_items 
+         SET name = $1, category = $2, brand = $3, color = $4, color_hex = $5,
+             size = $6, material = $7, tags = $8, image_url = $9, description = $10
+         WHERE id = $11 AND user_id = $12
+         RETURNING *`,
+        [
+          itemData.name,
+          itemData.category,
+          itemData.brand,
+          itemData.color,
+          itemData.colorHex,
+          itemData.size,
+          itemData.material,
+          itemData.tags,
+          itemData.imageUrl,
+          itemData.description,
+          itemId,
+          userId
+        ]
+      );
+
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      const row = result.rows[0];
+      return {
+        id: row.id,
+        userId: row.user_id,
+        name: row.name,
+        category: row.category,
+        brand: row.brand,
+        color: row.color,
+        colorHex: row.color_hex,
+        size: row.size,
+        material: row.material,
+        tags: row.tags,
+        imageUrl: row.image_url,
+        description: row.description,
+        createdAt: row.created_at
+      };
+    } finally {
+      await client.end();
+    }
+  }
+
+  async deleteWardrobeItem(itemId, userId) {
+    const client = await this.getClient();
+    try {
+      const result = await client.query(
+        'DELETE FROM wardrobe_items WHERE id = $1 AND user_id = $2 RETURNING id',
+        [itemId, userId]
+      );
+      
+      return result.rows.length > 0;
+    } finally {
+      await client.end();
+    }
+  }
+
+  async getWardrobeRecommendations(itemId, userId) {
+    const client = await this.getClient();
+    try {
+      const itemResult = await client.query(
+        'SELECT * FROM wardrobe_items WHERE id = $1 AND user_id = $2',
+        [itemId, userId]
+      );
+
+      if (itemResult.rows.length === 0) {
+        return { item: null, recommendations: [] };
+      }
+
+      const baseItem = itemResult.rows[0];
+      const recommendations = {};
+
+      if (baseItem.category === 'topwear') {
+        const bottomwear = await client.query(
+          'SELECT * FROM wardrobe_items WHERE user_id = $1 AND category = $2 ORDER BY RANDOM() LIMIT 3',
+          [userId, 'bottomwear']
+        );
+        const footwear = await client.query(
+          'SELECT * FROM wardrobe_items WHERE user_id = $1 AND category = $2 ORDER BY RANDOM() LIMIT 3',
+          [userId, 'footwear']
+        );
+        recommendations.bottomwear = bottomwear.rows;
+        recommendations.footwear = footwear.rows;
+      } else if (baseItem.category === 'bottomwear') {
+        const topwear = await client.query(
+          'SELECT * FROM wardrobe_items WHERE user_id = $1 AND category = $2 ORDER BY RANDOM() LIMIT 3',
+          [userId, 'topwear']
+        );
+        const footwear = await client.query(
+          'SELECT * FROM wardrobe_items WHERE user_id = $1 AND category = $2 ORDER BY RANDOM() LIMIT 3',
+          [userId, 'footwear']
+        );
+        recommendations.topwear = topwear.rows;
+        recommendations.footwear = footwear.rows;
+      } else if (baseItem.category === 'footwear') {
+        const topwear = await client.query(
+          'SELECT * FROM wardrobe_items WHERE user_id = $1 AND category = $2 ORDER BY RANDOM() LIMIT 3',
+          [userId, 'topwear']
+        );
+        const bottomwear = await client.query(
+          'SELECT * FROM wardrobe_items WHERE user_id = $1 AND category = $2 ORDER BY RANDOM() LIMIT 3',
+          [userId, 'bottomwear']
+        );
+        recommendations.topwear = topwear.rows;
+        recommendations.bottomwear = bottomwear.rows;
+      }
+
+      return {
+        item: baseItem,
+        recommendations
+      };
+    } finally {
+      await client.end();
+    }
+  }
 }
 
 const storage = new DataStorage();
