@@ -1,0 +1,112 @@
+Build a full-stack web app called “Drip Check” using the following stack:
+
+Frontend: React.js + CSS
+
+Backend: Node.js + Express.js
+
+Database: MySQL
+
+🌟 Project Overview
+
+Drip Check is an AI-powered outfit recommendation platform. Users can select any clothing item (topwear, bottomwear, or footwear), and the app will suggest complete outfit combinations that match that item’s color, vibe, and style.
+
+The project should be structured as a scalable MERN-style monorepo, but with MySQL instead of MongoDB. Use RESTful architecture and keep frontend and backend in separate folders.
+
+🧩 Core Features
+Frontend (React.js)
+
+Homepage:
+
+Displays three category cards: Topwear, Bottomwear, Footwear.
+
+Clicking a card navigates to a selection page for that category.
+
+Item Selection Page:
+
+Displays grid of available clothing items for the selected category.
+
+Each item shows image, name, and a “Select Item” button.
+
+When user selects an item, it navigates to the Recommendation Page.
+
+AI Recommendation Page:
+
+Shows the selected item on top.
+
+Below, shows 3–5 AI-generated outfit recommendations, each including:
+
+Outfit image (placeholder or AI image link)
+
+Description (e.g., “Beige chinos + white sneakers — balanced minimal look”)
+
+Buttons: Save, Shuffle, Share
+
+Optional Style Context Form:
+
+Dropdowns or inputs for physique, skin tone, style vibe, and occasion.
+
+Saves data to user profile for personalized recommendations.
+
+UI/UX Styling Guidelines:
+
+Minimal white background, rounded corners (2xl), soft shadows.
+
+Accent color: gold #E5C77E.
+
+Use modern typography, clean spacing, hover animations.
+
+Use CSS only (no UI framework).
+
+Backend (Node.js + Express)
+
+Setup REST API routes for:
+
+GET /api/categories → returns topwear, bottomwear, footwear
+
+GET /api/items/:category → returns items of selected category
+
+GET /api/recommendations/:itemId → returns outfit suggestions
+
+POST /api/saveOutfit → saves a chosen outfit to user’s profile
+
+POST /api/rateCombination → records color harmony score
+
+POST /api/userProfile → stores user’s physique, tone, and preferences
+
+Use MySQL for data storage with following tables:
+
+users (id, name, email, password, physique, tone, styleVibe, occasion)
+
+categories (id, name)
+
+items (id, categoryId, name, imageUrl, colorHex, patternType)
+
+outfits (id, topwearId, bottomwearId, footwearId, description, score)
+
+saved_outfits (id, userId, outfitId, savedAt)
+
+Setup Sequelize ORM or native MySQL driver for DB connection.
+Include a db.js file for reusable database configuration.
+
+Backend should return mock AI recommendations initially (placeholder JSON), but structure should allow integrating a real AI API later.
+
+Include CORS, body-parser, and dotenv for environment handling.
+
+🧠 Additional Instructions
+
+Setup proxy from React to backend ("proxy": "http://localhost:5000").
+
+Backend runs on port 5000, frontend on 3000.
+
+Include mock seed data for each clothing category.
+
+Implement reusable React components (e.g., CategoryCard, OutfitCard).
+
+Use React Router for navigation between pages.
+
+Add README.md with setup instructions (npm install, run dev, etc.).
+
+🏁 Goal
+
+Generate a fully functional full-stack boilerplate for Drip Check, ready for AI integration later.
+The code should be modular, clean, and documented, using best practices for Express routes, React components, and MySQL models.
