@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const ProductCard = ({ product, onClick }) => {
+  const [isAdding, setIsAdding] = useState(false);
+  const [added, setAdded] = useState(false);
+  const userId = 'user1';
+
   const handleClick = () => {
     if (onClick) {
       onClick(product.id);
@@ -9,8 +14,28 @@ const ProductCard = ({ product, onClick }) => {
 
   const handleGetRecommendations = (e) => {
     e.stopPropagation();
-    // This will be handled by the parent component or routing
     window.location.href = `/recommendations/${product.id}`;
+  };
+
+  const handleAddToWardrobe = async (e) => {
+    e.stopPropagation();
+    if (isAdding || added) return;
+
+    try {
+      setIsAdding(true);
+      await axios.post(`/api/users/${userId}/wardrobe/from-product/${product.id}`);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    } catch (error) {
+      console.error('Error adding to wardrobe:', error);
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert('Failed to add item to wardrobe');
+      }
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   return (
@@ -94,8 +119,13 @@ const ProductCard = ({ product, onClick }) => {
             Get Outfits
           </button>
           
-          <button className="btn-icon" title="Add to favorites">
-            <i data-feather="heart"></i>
+          <button 
+            className={`btn-icon ${added ? 'active' : ''}`}
+            onClick={handleAddToWardrobe}
+            disabled={isAdding}
+            title={added ? 'Added to wardrobe!' : 'Add to wardrobe'}
+          >
+            <i data-feather={added ? 'check' : 'plus'}></i>
           </button>
         </div>
       </div>

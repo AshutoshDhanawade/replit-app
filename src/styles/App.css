@@ -157,6 +157,11 @@ body {
   color: var(--accent-color);
 }
 
+.btn-success {
+  background: #4caf50 !important;
+  border-color: #4caf50 !important;
+}
+
 /* Typography */
 .section-title {
   font-size: 32px;

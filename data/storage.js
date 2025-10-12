@@ -587,6 +587,105 @@ class DataStorage {
       await client.end();
     }
   }
+
+  async addProductToWardrobe(userId, productId) {
+    const client = await this.getClient();
+    try {
+      const productResult = await client.query(
+        'SELECT * FROM products WHERE id = $1',
+        [productId]
+      );
+
+      if (productResult.rows.length === 0) {
+        throw new Error('Product not found');
+      }
+
+      const product = productResult.rows[0];
+
+      const checkResult = await client.query(
+        'SELECT id FROM wardrobe_items WHERE user_id = $1 AND name = $2 AND brand = $3 AND category = $4',
+        [userId, product.name, product.brand, product.category]
+      );
+
+      if (checkResult.rows.length > 0) {
+        throw new Error('This item is already in your wardrobe');
+      }
+
+      const result = await client.query(
+        `INSERT INTO wardrobe_items 
+        (user_id, name, category, brand, color, image_url, description, size, material, tags) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+        RETURNING *`,
+        [
+          userId,
+          product.name,
+          product.category,
+          product.brand,
+          product.color,
+          product.image_url,
+          product.description,
+          null,
+          null,
+          null
+        ]
+      );
+
+      return result.rows[0];
+    } finally {
+      await client.end();
+    }
+  }
+
+  async addBundleToWardrobe(userId, bundleId) {
+    const client = await this.getClient();
+    try {
+      const bundleResult = await client.query(
+        `SELECT p.* FROM bundle_items bi
+         JOIN products p ON bi.product_id = p.id
+         WHERE bi.bundle_id = $1`,
+        [bundleId]
+      );
+
+      if (bundleResult.rows.length === 0) {
+        throw new Error('Bundle not found or has no items');
+      }
+
+      const addedItems = [];
+
+      for (const product of bundleResult.rows) {
+        const checkResult = await client.query(
+          'SELECT id FROM wardrobe_items WHERE user_id = $1 AND name = $2 AND brand = $3 AND category = $4',
+          [userId, product.name, product.brand, product.category]
+        );
+
+        if (checkResult.rows.length === 0) {
+          const result = await client.query(
+            `INSERT INTO wardrobe_items 
+            (user_id, name, category, brand, color, image_url, description, size, material, tags) 
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+            RETURNING *`,
+            [
+              userId,
+              product.name,
+              product.category,
+              product.brand,
+              product.color,
+              product.image_url,
+              product.description,
+              null,
+              null,
+              null
+            ]
+          );
+          addedItems.push(result.rows[0]);
+        }
+      }
+
+      return addedItems;
+    } finally {
+      await client.end();
+    }
+  }
 }
 
 const storage = new DataStorage();

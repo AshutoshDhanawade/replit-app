@@ -369,4 +369,43 @@ router.get('/users/:userId/wardrobe/:itemId/recommendations', async (req, res) =
   }
 });
 
+router.post('/users/:userId/wardrobe/from-product/:productId', async (req, res) => {
+  try {
+    const { userId, productId } = req.params;
+    
+    const item = await storage.addProductToWardrobe(userId, productId);
+    
+    res.status(201).json({
+      message: 'Product added to wardrobe successfully',
+      item
+    });
+  } catch (error) {
+    console.error('Error adding product to wardrobe:', error);
+    res.status(500).json({ 
+      error: 'Failed to add product to wardrobe',
+      message: error.message || 'Unable to add item at this time'
+    });
+  }
+});
+
+router.post('/users/:userId/wardrobe/from-bundle/:bundleId', async (req, res) => {
+  try {
+    const { userId, bundleId } = req.params;
+    
+    const items = await storage.addBundleToWardrobe(userId, bundleId);
+    
+    res.status(201).json({
+      message: 'Bundle added to wardrobe successfully',
+      items,
+      count: items.length
+    });
+  } catch (error) {
+    console.error('Error adding bundle to wardrobe:', error);
+    res.status(500).json({ 
+      error: 'Failed to add bundle to wardrobe',
+      message: error.message || 'Unable to add items at this time'
+    });
+  }
+});
+
 module.exports = router;

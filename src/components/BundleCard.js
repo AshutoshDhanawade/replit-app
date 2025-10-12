@@ -5,6 +5,9 @@ const BundleCard = ({ bundle, showSaveButton = true, showShareButton = true }) =
   const [isSaving, setIsSaving] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [saved, setSaved] = useState(bundle.isSaved || false);
+  const [isAddingToWardrobe, setIsAddingToWardrobe] = useState(false);
+  const [addedToWardrobe, setAddedToWardrobe] = useState(false);
+  const userId = 'user1';
 
   const handleSave = async (e) => {
     e.stopPropagation();
@@ -45,12 +48,34 @@ const BundleCard = ({ bundle, showSaveButton = true, showShareButton = true }) =
         // Fallback: Copy to clipboard
         const shareText = `Check out this outfit: ${bundle.title}\n${bundle.description}\n${window.location.href}`;
         await navigator.clipboard.writeText(shareText);
-        // You might want to show a "Copied to clipboard" notification here
       }
     } catch (error) {
       console.error('Error sharing outfit:', error);
     } finally {
       setIsSharing(false);
+    }
+  };
+
+  const handleAddToWardrobe = async (e) => {
+    e.stopPropagation();
+    if (isAddingToWardrobe || addedToWardrobe) return;
+
+    try {
+      setIsAddingToWardrobe(true);
+      const response = await axios.post(`/api/users/${userId}/wardrobe/from-bundle/${bundle.id}`);
+      setAddedToWardrobe(true);
+      const count = response.data.count || 0;
+      alert(`${count} item(s) added to your wardrobe!`);
+      setTimeout(() => setAddedToWardrobe(false), 3000);
+    } catch (error) {
+      console.error('Error adding bundle to wardrobe:', error);
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert('Failed to add bundle to wardrobe');
+      }
+    } finally {
+      setIsAddingToWardrobe(false);
     }
   };
 
@@ -202,8 +227,13 @@ const BundleCard = ({ bundle, showSaveButton = true, showShareButton = true }) =
 
       {/* Bundle Actions */}
       <div className="bundle-actions">
-        <button className="btn-primary btn-small">
-          View Details
+        <button 
+          className={`btn-primary btn-small ${addedToWardrobe ? 'btn-success' : ''}`}
+          onClick={handleAddToWardrobe}
+          disabled={isAddingToWardrobe}
+        >
+          <i data-feather={addedToWardrobe ? 'check' : 'plus'}></i>
+          {addedToWardrobe ? 'Added!' : 'Add to Wardrobe'}
         </button>
         
         <div className="action-group">
