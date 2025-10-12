@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import WardrobeItemCard from './WardrobeItemCard';
+import WardrobeListItem from './WardrobeListItem';
 import axios from 'axios';
 
 const WardrobePage = () => {
@@ -175,9 +175,9 @@ const WardrobePage = () => {
             </button>
           </div>
         ) : (
-          <div className="products-grid">
+          <div className="wardrobe-list">
             {filteredItems.map(item => (
-              <WardrobeItemCard
+              <WardrobeListItem
                 key={item.id}
                 item={item}
                 onDelete={handleDeleteItem}

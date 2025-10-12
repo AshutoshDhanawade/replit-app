@@ -1314,6 +1314,144 @@
   }
 }
 
+/* Wardrobe List Styles */
+.wardrobe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wardrobe-list-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.wardrobe-list-item:hover {
+  box-shadow: var(--shadow-medium);
+  border-color: var(--accent-color);
+}
+
+.item-thumbnail {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--background-light);
+  position: relative;
+}
+
+.item-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbnail-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.thumbnail-placeholder i {
+  width: 32px;
+  height: 32px;
+}
+
+.item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.item-brand {
+  font-weight: 500;
+}
+
+.meta-separator {
+  color: var(--text-muted);
+}
+
+.item-color {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.color-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.item-tags .tag {
+  background: var(--background-light);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .wardrobe-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .item-thumbnail {
+    width: 100%;
+    height: 200px;
+  }
+
+  .item-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
 @media (max-width: 480px) {
   .search-bar {
     flex-direction: column;
