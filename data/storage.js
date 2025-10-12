@@ -28,7 +28,9 @@ class DataStorage {
             'brand', p.brand,
             'price', p.price,
             'color', p.color,
-            'occasion', p.occasion
+            'occasion', p.occasion,
+            'category', p.category,
+            'imageUrl', p.image_url
           )) as items
         FROM bundles b
         LEFT JOIN bundle_items bi ON b.id = bi.bundle_id

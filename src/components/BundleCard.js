@@ -66,22 +66,49 @@ const BundleCard = ({ bundle, showSaveButton = true, showShareButton = true }) =
 
   return (
     <div className="bundle-card">
-      {/* Bundle Image/Preview */}
-      <div className="bundle-image">
-        {bundle.imageUrl ? (
-          <img 
-            src={bundle.imageUrl} 
-            alt={bundle.title || 'Outfit bundle'}
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-        ) : null}
-        <div className="image-placeholder" style={{ display: bundle.imageUrl ? 'none' : 'flex' }}>
-          <i data-feather="package"></i>
-          <span>Outfit Bundle</span>
-        </div>
+      {/* Bundle Products Grid */}
+      <div className="bundle-products-grid">
+        {bundle.items && bundle.items.length > 0 ? (
+          bundle.items.slice(0, 3).map((item, index) => (
+            <div key={index} className="bundle-product-item">
+              {item.imageUrl ? (
+                <img 
+                  src={item.imageUrl} 
+                  alt={item.name}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className="product-placeholder" style={{ display: item.imageUrl ? 'none' : 'flex' }}>
+                <i data-feather={
+                  item.category === 'topwear' ? 'user' : 
+                  item.category === 'bottomwear' ? 'grid' : 
+                  'package'
+                }></i>
+              </div>
+              <div className="product-label">{item.category}</div>
+            </div>
+          ))
+        ) : (
+          <div className="bundle-image">
+            {bundle.imageUrl ? (
+              <img 
+                src={bundle.imageUrl} 
+                alt={bundle.title || 'Outfit bundle'}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+            ) : null}
+            <div className="image-placeholder" style={{ display: bundle.imageUrl ? 'none' : 'flex' }}>
+              <i data-feather="package"></i>
+              <span>Outfit Bundle</span>
+            </div>
+          </div>
+        )}
         
         {/* Quick Actions Overlay */}
         <div className="bundle-overlay">
