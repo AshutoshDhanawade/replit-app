@@ -56,6 +56,30 @@ class DataStorage {
     }
   }
 
+  async getSearchSuggestions(searchTerm) {
+    const client = await this.getClient();
+    try {
+      const result = await client.query(
+        `SELECT id, name, image_url, category, brand, price 
+         FROM products 
+         WHERE name ILIKE $1 OR brand ILIKE $1 OR color ILIKE $1
+         LIMIT 8`,
+        [`%${searchTerm}%`]
+      );
+      
+      return result.rows.map(row => ({
+        id: row.id,
+        name: row.name,
+        imageUrl: row.image_url,
+        category: row.category,
+        brand: row.brand,
+        price: parseFloat(row.price)
+      }));
+    } finally {
+      await client.end();
+    }
+  }
+
   async searchProducts(filters) {
     const { searchTerm, category, color, brand, occasion, minPrice, maxPrice } = filters;
     const client = await this.getClient();

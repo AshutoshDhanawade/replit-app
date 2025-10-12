@@ -16,6 +16,27 @@ router.get('/bundles/personalized', async (req, res) => {
   }
 });
 
+// Get search suggestions
+router.get('/search/suggestions', async (req, res) => {
+  try {
+    const { q } = req.query;
+    
+    if (!q || q.trim().length < 2) {
+      return res.json({ suggestions: [] });
+    }
+
+    const suggestions = await storage.getSearchSuggestions(q);
+    
+    res.json({ suggestions });
+  } catch (error) {
+    console.error('Suggestions error:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch suggestions',
+      message: 'Unable to load suggestions at this time'
+    });
+  }
+});
+
 // Search products with filters
 router.get('/search', async (req, res) => {
   try {
