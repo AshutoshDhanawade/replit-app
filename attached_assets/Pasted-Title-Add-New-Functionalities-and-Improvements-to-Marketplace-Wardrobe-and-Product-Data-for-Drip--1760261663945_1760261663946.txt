@@ -1,0 +1,77 @@
+Title: Add New Functionalities and Improvements to Marketplace, Wardrobe, and Product Data for Drip Check
+
+🔍 Context
+
+Drip Check is an outfit recommendation app where users can discover clothing items, generate outfit bundles, and manage their personal wardrobe.
+
+The app currently includes:
+
+A Marketplace with searchable clothing items and outfit bundle generation.
+
+A Wardrobe where users can upload and manage personal clothing items.
+
+Outfit generation flows that show matching combinations from either marketplace items or the wardrobe.
+
+We now want to refine some existing features and introduce a few new capabilities for a smoother, more realistic experience.
+
+🛍️ Marketplace Page Updates
+
+Bundle Card Enhancement
+
+Each bundle card displayed on the Marketplace page should visually include images of all three products that make up that bundle.
+
+The goal is to help users immediately see the full outfit combination (e.g., topwear, bottomwear, and footwear) in one compact view.
+
+Add to Wardrobe Feature
+
+Allow users to add individual marketplace products or entire bundles directly to their wardrobe.
+
+This helps users collect and save looks or items they like from the marketplace into their personal closet, making it easy to later generate wardrobe-based outfits using them.
+
+Improved Search Experience (Live Search Suggestions)
+
+When a user types into the marketplace search bar, the system should display live suggestions in a dropdown list directly below the search bar.
+
+Each suggestion in the dropdown should include the product name and thumbnail image for quick identification.
+
+As the user continues typing, the list should dynamically update with more relevant results.
+
+Clicking on a result should take the user directly to that product or its detailed view.
+
+🔎 Marketplace Search Results Page
+
+Filter Functionality Enhancement
+
+Currently, filters might apply automatically. We want to change this behavior.
+
+Add an “Apply” button for the filters on the marketplace search results page.
+
+The filters (like category, price range, color, brand, etc.) should only be applied after the user clicks the “Apply” button.
+
+This ensures the user can select multiple filters first, then apply them all together in one go.
+
+👕 Wardrobe Page Updates
+
+Default Wardrobe View
+
+When a user opens their wardrobe, the default view should display only the clothing items that they have added — shown in a simple list format with thumbnails and category details.
+
+This keeps the wardrobe clean and focused on the user's own collection.
+
+Wardrobe Bundle Display
+
+When a user clicks on a specific item in their wardrobe, the app should show only the wardrobe bundles related to that selected item.
+
+These wardrobe bundles should be composed exclusively of items from the user’s wardrobe (no marketplace items).
+
+For example, if the user clicks on a topwear item, the app should show bundles that include that topwear along with matching bottomwear and footwear items from their wardrobe.
+
+🧾 Extra Data Setup
+
+Sample Product Dataset for Marketplace
+
+Add a set of at least 25 sample products to the marketplace database so that the interface feels full and realistic.
+
+Each product should include an image, category (topwear, bottomwear, footwear, etc.), and basic attributes like color, brand, and type.
+
+The goal is to visually populate the app and provide a better sense of how the marketplace and bundles will look with more data.
