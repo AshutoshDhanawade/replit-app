@@ -12,10 +12,17 @@ const FilterPanel = ({
   const [localFilters, setLocalFilters] = useState(filters);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  React.useEffect(() => {
+    setLocalFilters(filters);
+  }, [filters]);
+
   const handleFilterChange = (filterKey, value) => {
     const newFilters = { ...localFilters, [filterKey]: value };
     setLocalFilters(newFilters);
-    onFilterChange(newFilters);
+  };
+
+  const applyFilters = () => {
+    onFilterChange(localFilters);
   };
 
   const clearAllFilters = () => {
@@ -28,6 +35,7 @@ const FilterPanel = ({
   };
 
   const hasActiveFilters = Object.values(localFilters).some(filter => filter);
+  const hasUnappliedChanges = JSON.stringify(localFilters) !== JSON.stringify(filters);
 
   const colorOptions = [
     { value: 'black', label: 'Black', hex: '#000000' },
@@ -224,6 +232,17 @@ const FilterPanel = ({
               })}
             </div>
           </div>
+        )}
+
+        {/* Apply Filters Button */}
+        {hasUnappliedChanges && (
+          <button 
+            className="apply-filters-button"
+            onClick={applyFilters}
+          >
+            <i data-feather="check-circle"></i>
+            Apply Filters
+          </button>
         )}
       </div>
     </div>

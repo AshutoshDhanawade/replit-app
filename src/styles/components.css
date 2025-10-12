@@ -982,6 +982,35 @@
   color: var(--accent-color);
 }
 
+/* Apply Filters Button */
+.apply-filters-button {
+  width: 100%;
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+}
+
+.apply-filters-button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+.apply-filters-button i {
+  width: 18px;
+  height: 18px;
+}
+
 /* Search Page Styles */
 .search-page {
   padding-bottom: 40px;
